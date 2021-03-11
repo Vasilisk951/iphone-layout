@@ -1,13 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const json = () => {
-        fetch('../cross-sell-dbase/dbase.json')
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            console.log(data);
-        });
+        fetch('cross-sell-dbase/dbase.json')
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                const crossSellList = document.querySelector('.cross-sell__list')
+                const createCrossSellItem = (good) => {
+                    const liItem = document.createElement('li');
+                    liItem.innerHTML = `
+                    <article class="cross-sell__item">
+                        <img class="cross-sell__image" src=${good.photo} alt="${good.name}">
+                        <h3 class="cross-sell__title">${good.name}</h3>
+                        <p class="cross-sell__price">${good.price}₽</p>
+                        <button class="button_buy cross-sell__button">Купить</button>
+                    </article>
+                `;
+                return liItem;
+                }
+                data.forEach(item => crossSellList.append(createCrossSellItem(item)));
+
+                const crossSellTitle = document.querySelectorAll('.cross-sell__title');
+                const buttonBuy = document.querySelectorAll('.button_buy');
+                const modal = document.querySelector('.modal');
+                const modalTitle = document.querySelector('.modal__title');
+
+
+                buttonBuy.forEach((item, index) => {
+                    item.addEventListener('click', () => {
+                        modal.classList.add('open');
+                        modalTitle.innerHTML =  crossSellTitle[index - 1].innerHTML;
+                        
+                    })
+                })
+               
+            });
+
     }
 
     // выбор товара
@@ -173,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
     }
-
 
 
     json();
