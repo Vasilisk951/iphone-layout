@@ -1,5 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    const json = () => {
+        fetch('../cross-sell-dbase/dbase.json')
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+        });
+    }
+
     // выбор товара
     const tabs = () => {
         /* const cardDetailChangeElems = document.querySelectorAll('.card-detail__change');
@@ -61,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             btn.addEventListener('click', () => {
 
-                if(!btn.classList.contains('active')) {
+                if (!btn.classList.contains('active')) {
 
                     deactive();
                     btn.classList.add('active');
@@ -102,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // закрываем предыдущие открытиые пункты характеристик
         const closeAllDrops = () => {
             characteristicsItemElems.forEach((elem) => {
-                if(elem.children[0].classList.contains('active') && elem.children[1].classList.contains('active')) {
+                if (elem.children[0].classList.contains('active') && elem.children[1].classList.contains('active')) {
                     close(elem.children[0], elem.children[1]);
                 }
             })
@@ -111,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // событие клика и запуск функций открытия и закрытия
         characteristicsListElem.addEventListener('click', (event) => {
             const target = event.target;
-            if(target.classList.contains('characteristics__title')) {
+            if (target.classList.contains('characteristics__title')) {
                 const parent = target.closest('.characteristics__item');
                 const description = parent.querySelector('.characteristics__description');
                 description.classList.contains('active') ? close(target, description) : open(target, description);
@@ -121,31 +131,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
     };
 
+    // работа модального окна
     const modal = () => {
         const cardDetailsButtonBuy = document.querySelector('.card-details__button_buy');
         const cardDetailsButtonDelivery = document.querySelector('.card-details__button_delivery');
         const modal = document.querySelector('.modal');
         const modalSubtitle = document.querySelector('.modal__subtitle');
+        const cardDetailsTitle = document.querySelector('.card-details__title');
+        const modalTitle = document.querySelector('.modal__title');
+
+        const openModal = () => {
+            document.addEventListener('keydown', escModal);
+            modal.classList.add('open');
+            modalTitle.innerHTML = cardDetailsTitle.innerHTML;
+        };
+
+        const closeModal = () => {
+            modal.classList.remove('open');
+            document.removeEventListener('keydown', escModal)
+        };
+
+        const escModal = event => {
+            if (event.code === 'Escape') {
+                closeModal();
+            }
+        };
 
         cardDetailsButtonBuy.addEventListener('click', () => {
-            modal.classList.add('open');
+            openModal();
             modalSubtitle.innerHTML = `Оплата`;
         })
         cardDetailsButtonDelivery.addEventListener('click', () => {
-            modal.classList.add('open');
+            openModal();
             modalSubtitle.innerHTML = `Доставка и оплата`;
         })
         modal.addEventListener('click', (event) => {
             const target = event.target;
-            if(target.classList.contains('modal__close') || target.classList.contains('modal')) {
-                modal.classList.remove('open');
+            if (target.classList.contains('modal__close') || target.classList.contains('modal')) {
+                closeModal();
             }
         })
+
     }
-       
 
 
 
+    json();
     tabs();
     accordion();
     modal();
