@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then((data) => {
                 const crossSellList = document.querySelector('.cross-sell__list')
+
+                //функция для переменивания массива
+                const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+
                 const createCrossSellItem = (good) => {
                     const liItem = document.createElement('li');
                     liItem.innerHTML = `
@@ -19,13 +23,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 return liItem;
                 }
-                data.forEach(item => crossSellList.append(createCrossSellItem(item)));
 
+                const showMore = (arr) => {
+                    const btnCrossSellMore = document.querySelector('.cross-sell__add');
+                    btnCrossSellMore.addEventListener('click', () => {
+                        arr.slice(4).forEach(item => crossSellList.append(createCrossSellItem(item)));
+                        btnCrossSellMore.remove();
+                    })
+                };
+
+                const createCrossSellList = () => {
+                    const shuffleGoods = shuffle(data);
+                    //const fourItems = shuffleGoods.slice(0, 4);
+
+                    shuffleGoods.slice(0, 4).forEach(item => crossSellList.append(createCrossSellItem(item)));
+                    showMore(shuffleGoods);
+                }
+                //shuffle(data).forEach(item => crossSellList.append(createCrossSellItem(item)));
+                createCrossSellList();
+
+
+                // модальное окно карточек
                 const crossSellTitle = document.querySelectorAll('.cross-sell__title');
                 const buttonBuy = document.querySelectorAll('.button_buy');
                 const modal = document.querySelector('.modal');
                 const modalTitle = document.querySelector('.modal__title');
-
 
                 buttonBuy.forEach((item, index) => {
                     item.addEventListener('click', () => {
@@ -208,5 +230,5 @@ document.addEventListener('DOMContentLoaded', () => {
     tabs();
     accordion();
     modal();
-
+    amenu('.header__menu', '.header-menu__list', '.header-menu__item', '.header-menu__burger');
 });

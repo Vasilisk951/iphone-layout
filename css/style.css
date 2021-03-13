@@ -589,4 +589,8 @@ h1, h2, h3, p, ul {
     margin-top: 20px;
 }
 
+.cross-sell__remove {
+    display: none;
+}
+
 
